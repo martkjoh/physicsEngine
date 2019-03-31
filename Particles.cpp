@@ -41,35 +41,33 @@ CoordPair CoordPair::operator/= (const double& rhs)
 
 // Coord
 
-Coord::Coord(double x, double y) : pos{x, y} {};
+Coord::Coord(double x, double y, 
+    double vX = 0, double vY = 0, 
+    double aX = 0, double aY = 0,
+    double t = 0, double m  = 0):
+    pos{x, y}, vel{vX, vY}, acc{aX, aY},
+    time{t}, mass{m} {};
 
-Coord::Coord(double x, double y, double vX, double vY, double aX, double aY):
-    pos{x, y}, vel{vX, vY}, acc{aX, aY} {};
 
-
-// Particle
+// Particlem
 // Implementation of the class Particle
 
 
 Particle::Particle(Coord c) : 
-    coords{c}, Fl_Widget{(int) c.pos.x, (int) c.pos.y, 2 * radius, 2 * radius} 
+    coords{c}, radius{(int) c.mass}, Fl_Widget{(int) c.pos.x, (int) c.pos.y, 2 * radius, 2 * radius} 
     {
         numParticles++;
         particles.push_back(this);
     };
 
-Particle::Particle(double x, double y, double vX, double vY) :
-    Particle{Coord{x, y, vX, vY, 0, 0}} {};
-
-Particle::Particle(double x, double y) : Particle{x, y, 0, 0} {};
+Particle::Particle(double x, double y, double vX = 0, double vY = 0, double m = 10) :
+    Particle{Coord{x, y, vX, vY, 0, 0, 0, m}} {};
 
 void Particle::draw()
 {
     fl_color(FL_BLACK);
-    fl_pie((int)coords.pos.x, coords.pos.y,  2 * radius, 2 * radius, 0, 360);
+    fl_circle(coords.pos.x, coords.pos.y, coords.mass * 5);
 }
-
-
 
 
 // Other functionns
@@ -89,6 +87,37 @@ double operator* (const CoordPair& lhs, const CoordPair& rhs)
 // functions
 
 
+void startSimulation(int numParticles)
+{
+    srand(static_cast<unsigned int>(time(nullptr)));
+
+    Fl_Window* win = new Fl_Window{1600, 1000};
+    
+    for (int i = 0; i < numParticles; i++)
+    {
+        new Particle(randBetween<double>(10, 1590), randBetween<double>(10, 990),
+            randBetween<double>(0, 10) - 5, randBetween<double>(0, 10) - 5, 
+            randBetween<double>(0, 10));
+    }
+    
+    win->end();
+    win->show();
+
+    auto time = chrono::steady_clock::now();
+    
+    while(win->shown())
+    {
+        updateState();
+        Fl::check();
+        Fl::redraw();
+        win->redraw();
+        this_thread::sleep_until(time);
+        time += chrono::microseconds((int) 1000000 / 60);
+    }
+
+
+}
+
 
 void updateState()
 {
@@ -97,6 +126,7 @@ void updateState()
     Particle* p;
     Particle* q;
     for (int i = 0; i < Particle::numParticles; i++)
+
     {
         p = Particle::particles[i];
         p->coords.vel += p->coords.acc;
@@ -109,7 +139,7 @@ void updateState()
             q = Particle::particles[j];
             if (p == q) {continue;}
             CoordPair r = p->coords.pos - q->coords.pos;
-            p->coords.acc += - (G / (r * r)) * (r / r.abs());
+            p->coords.acc += - (G / (r * r)) * (r / r.abs()) * q->coords.mass;
         }
         p->coords.vel *= 0.999;
     }

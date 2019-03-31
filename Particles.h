@@ -1,15 +1,19 @@
 #pragma once
 
 #include <FL/Fl.H>
+#include <FL/Fl_Window.H>
 #include <FL/fl_draw.H>
 #include <FL/Fl_Widget.H>
 #include <iostream>
 #include <math.h>
 #include <vector>
+#include <thread>
+#include "Utilities.h"
+
 
 using namespace::std;
 
-constexpr double G = 10000;
+constexpr double G = 1000;
 
 struct CoordPair
 {
@@ -27,6 +31,8 @@ struct CoordPair
     CoordPair operator-= (const CoordPair& rhs);
     CoordPair operator*= (const double& rhs);
     CoordPair operator/= (const double& rhs);
+
+
     CoordPair operator*= (const CoordPair& rhs);
     
     friend CoordPair operator+ (CoordPair lhs, const CoordPair& rhs);
@@ -43,21 +49,23 @@ struct Coord
 {
     CoordPair pos, vel, acc;
     double time;
+    double mass;
     
-    Coord(double x, double y);
-    Coord(double x, double y, double vX, double vY, double aX, double aY);
+    Coord(double x, double y, 
+        double vX, double vY, 
+        double aX, double aY,
+        double t, double m);
 };
 
 
 class Particle : public Fl_Widget
 {
     private:
-        int radius = 20;
+        int radius;
         Coord coords;
         
     public:
-        Particle(double x, double y);
-        Particle(double x, double y, double vX, double vY);
+        Particle(double x, double y, double vX, double vY, double m);
         Particle(Coord c);
 
         static vector<Particle*> particles;
@@ -67,5 +75,8 @@ class Particle : public Fl_Widget
 
     friend void updateState();
 };
+
+
+void startSimulation(int numParticles);
 
 void updateState();
