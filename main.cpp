@@ -7,8 +7,7 @@ using namespace::std;
 
 int main(int argc, char** argv)
 {
-    
-    mainLoop();
+    mainLoop(argv);
 
     return 0;
 }

@@ -4,4 +4,4 @@
 
 void simRandom(int numParticles);
 void sunSystem();
-void mainLoop();
+void mainLoop(char** argv);

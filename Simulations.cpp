@@ -22,11 +22,11 @@ void sunSystem()
     new Particle{1282, 500, 0, -4, 0.1};
 }
 
-void mainLoop()
+void mainLoop(char** argv)
 {
     Fl_Window* win = new Fl_Window{1600, 1000};
-    simRandom(10);
-    // sunSystem();
+    if (*argv[1] == 's') {sunSystem();}
+    else {simRandom(atof(argv[1]));}
     win->end();
     win->show();
     auto time = chrono::steady_clock::now();
