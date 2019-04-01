@@ -1,5 +1,7 @@
 #include <chrono>
 #include <random>
+#include <time.h>
+#include <thread>
 
 
 int getTime();

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <FL/Fl.H>
-#include <FL/Fl_Window.H>
 #include <FL/fl_draw.H>
 #include <FL/Fl_Widget.H>
 #include <iostream>
@@ -12,8 +10,6 @@
 
 
 using namespace::std;
-
-constexpr double G = 1000;
 
 struct CoordPair
 {
@@ -61,7 +57,7 @@ struct Coord
 class Particle : public Fl_Widget
 {
     private:
-        int radius;
+        double radius;
         Coord coords;
         
     public:

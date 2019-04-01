@@ -1,4 +1,5 @@
-#include "Particles.h"
+#include "Particles.h" 
+#include "Simulations.h"
 #include <chrono>
 
 
@@ -6,9 +7,8 @@ using namespace::std;
 
 int main(int argc, char** argv)
 {
-    cout << argv[0] << endl;
-    cout << argv[1] << endl;
-    startSimulation(atof(argv[1]));
+    
+    mainLoop();
 
     return 0;
 }
