@@ -3,5 +3,5 @@
 #include "Particles.h"
 
 void simRandom(int numParticles);
+
 void sunSystem();
-void mainLoop(char** argv);

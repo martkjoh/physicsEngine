@@ -45,12 +45,13 @@ Coord::Coord(double x, double y,
     time{t}, mass{m} {};
 
 
-// Particlem
+// Particle
 // Implementation of the class Particle
 
 
 Particle::Particle(Coord c) : 
-    coords{c}, radius{sqrt(c.mass)}, Fl_Widget{(int) c.pos.x, (int) c.pos.y, 2 * (int)radius, 2 * (int)radius} 
+    coords{c}, radius{sqrt(c.mass)}, 
+    Fl_Widget{(int) c.pos.x, (int) c.pos.y, 2 * (int)radius, 2 * (int)radius} 
     {
         numParticles++;
         particles.push_back(this);
@@ -61,8 +62,9 @@ Particle::Particle(double x, double y, double vX = 0, double vY = 0, double m = 
 
 void Particle::draw()
 {
-    fl_color(FL_BLACK);
-    fl_circle(coords.pos.x, coords.pos.y, radius);
+    fl_color(FL_BLUE);
+    fl_pie((int)(coords.pos.x - radius), (int)(coords.pos.y - radius), 
+    (int) radius * 2, (int) radius * 2, 0, 360);
 }
 
 
@@ -101,7 +103,7 @@ void updateState()
             q = Particle::particles[j];
             if (p == q) {continue;}
             CoordPair r = p->coords.pos - q->coords.pos;
-            CoordPair f =- 1 / (r * r) * r / r.abs()  * q->coords.mass;
+            CoordPair f =- 10 / (r * r) * r / r.abs()  * q->coords.mass;
 
             if ((r.abs() - (p->radius + q->radius)) < 0) {f = -4 *f;}
             p->coords.acc += f;
